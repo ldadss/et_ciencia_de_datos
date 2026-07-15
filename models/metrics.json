@@ -1,0 +1,49 @@
+{
+  "numeric_features": [
+    "age",
+    "height_cm",
+    "weight_kg",
+    "minutes_played",
+    "shots",
+    "shots_on_target",
+    "key_passes",
+    "successful_passes",
+    "total_passes",
+    "pass_accuracy",
+    "dribbles_attempted",
+    "successful_dribbles",
+    "crosses",
+    "successful_crosses",
+    "distance_covered_km",
+    "sprint_distance_km",
+    "top_speed_kmh",
+    "accelerations",
+    "decelerations",
+    "stamina_score",
+    "market_value_eur",
+    "expected_goals_xg",
+    "expected_assists_xa"
+  ],
+  "categorical_features": [
+    "position",
+    "preferred_foot",
+    "continent",
+    "tournament_stage"
+  ],
+  "classification_metrics": {
+    "accuracy": 0.8119,
+    "precision": 0.2928,
+    "recall": 0.7373,
+    "f1_score": 0.4191,
+    "roc_auc": 0.8686,
+    "n_train": 43680,
+    "n_test": 10920
+  },
+  "regression_metrics": {
+    "r2_score": 0.9766,
+    "mae": 0.294,
+    "rmse": 0.4835,
+    "n_train": 43680,
+    "n_test": 10920
+  }
+}
