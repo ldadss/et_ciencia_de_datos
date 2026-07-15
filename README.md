@@ -52,6 +52,7 @@ proyecto_fifa2026/
 │   ├── train_model.py    # Entrenamiento de los 2 modelos
 │   ├── model_goal_involvement.pkl
 │   ├── model_player_rating.pkl
+├    ── model_goal_involvement_tree.pkl   # Modelo alternativo (Árbol de Decisión)
 │   └── metrics.json      # Métricas de evaluación
 ├── dashboard/
 │   └── app.py             # Dashboard Dash/Plotly
@@ -90,6 +91,13 @@ proceso/contexto (sin fuga de datos del resultado):
 |---|---|---|---|
 | `model_goal_involvement.pkl` | Clasificación | ¿El jugador participó en un gol (marcó o asistió)? | ROC-AUC ≈ 0.87 |
 | `model_player_rating.pkl` | Regresión | Calificación de rendimiento (`player_rating`) | R² ≈ 0.98 |
+| `model_goal_involvement_tree.pkl` | Árbol de Decisión | Clasificación | Mismo target, como modelo alternativo de comparación | ROC-AUC ≈ 0.85 |
+
+El Árbol de Decisión se agregó para comparar un modelo de conjunto
+(ensemble, que promedia muchos árboles) contra un modelo único: el Random
+Forest generaliza mejor (mayor ROC-AUC y precisión), mientras que el árbol
+individual tiene mayor recall pero mucha menor precisión — evidencia de
+que un solo árbol tiende a sobreajustarse más fácilmente.
 
 Ver métricas completas en `models/metrics.json`.
 
@@ -110,6 +118,10 @@ Tres secciones:
 3. **Predicción de rendimiento**: formulario interactivo que consume los
    modelos entrenados y estima la probabilidad de contribución de gol y la
    calificación de rendimiento.
+4. **Análisis geográfico**: mapa choropleth con la calificación promedio de
+   rendimiento por selección, y comparación (barras + distribución) del
+   rating promedio entre continentes — respeta los mismos filtros globales
+   que las demás secciones.
 
 Ejecutar localmente:
 ```bash
@@ -171,7 +183,6 @@ integrante, según lo solicitado en la pauta de evaluación (la nota es
 individual)._
 
 | Integrante | Aporte principal |
-|---|---|
-| — | — |
-| — | — |
-| — | — |
+|Ignacio Cerda||
+|Sebastián González||
+|Jesús Morán||
