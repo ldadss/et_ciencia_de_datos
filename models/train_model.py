@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -159,21 +160,67 @@ def train_regression(df: pd.DataFrame) -> dict:
         "n_train": len(X_train),
         "n_test": len(X_test),
     }
+
     logger.info("Métricas regresión: %s", metrics)
 
     joblib.dump(pipeline, MODELS_DIR / "model_player_rating.pkl")
     return metrics
 
+def train_classification_tree(df: pd.DataFrame) -> dict:
+    """Modelo alternativo de clasificación (Árbol de Decisión) para comparar
+    contra el Random Forest — mismo target, mismas features."""
+    logger.info("Entrenando modelo alternativo: Árbol de Decisión (contribución de gol)...")
+    X = df[NUMERIC_FEATURES + CATEGORICAL_FEATURES]
+    y = df[TARGET_CLASSIFICATION]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    pipeline = Pipeline(
+        steps=[
+            ("preprocessor", build_preprocessor()),
+            (
+                "classifier",
+                DecisionTreeClassifier(
+                    max_depth=8,
+                    min_samples_leaf=10,
+                    class_weight="balanced",
+                    random_state=42,
+                ),
+            ),
+        ]
+    )
+    pipeline.fit(X_train, y_train)
+
+    y_pred = pipeline.predict(X_test)
+    y_proba = pipeline.predict_proba(X_test)[:, 1]
+
+    metrics = {
+        "accuracy": round(accuracy_score(y_test, y_pred), 4),
+        "precision": round(precision_score(y_test, y_pred), 4),
+        "recall": round(recall_score(y_test, y_pred), 4),
+        "f1_score": round(f1_score(y_test, y_pred), 4),
+        "roc_auc": round(roc_auc_score(y_test, y_proba), 4),
+        "n_train": len(X_train),
+        "n_test": len(X_test),
+    }
+    logger.info("Métricas Árbol de Decisión: %s", metrics)
+
+    joblib.dump(pipeline, MODELS_DIR / "model_goal_involvement_tree.pkl")
+    return metrics
 
 def main():
     df = load_dataset()
     clf_metrics = train_classification(df)
+    clf_tree_metrics = train_classification_tree(df)
     reg_metrics = train_regression(df)
 
     metadata = {
         "numeric_features": NUMERIC_FEATURES,
         "categorical_features": CATEGORICAL_FEATURES,
         "classification_metrics": clf_metrics,
+        "classification_metrics_decision_tree": clf_tree_metrics,  
         "regression_metrics": reg_metrics,
     }
     with open(MODELS_DIR / "metrics.json", "w", encoding="utf-8") as f:
