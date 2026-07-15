@@ -224,6 +224,27 @@ tab_predict = html.Div(
         ),
         html.Div(id="prediction-output"),
     ]
+)   
+
+# ----------------------------------------------------------------------
+# Tab 4: Análisis geográfico
+# ----------------------------------------------------------------------
+tab_geo = html.Div(
+    [
+        html.Br(),
+        dbc.Row(id="geo-kpi-row", className="g-3 mb-4"),
+        dbc.Row(
+            [
+                dbc.Col(dcc.Graph(id="graph-map-rating"), md=12),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(dcc.Graph(id="graph-continent-bar"), md=6),
+                dbc.Col(dcc.Graph(id="graph-continent-box"), md=6),
+            ]
+        ),
+    ]
 )
 
 app.layout = dbc.Container(
@@ -241,6 +262,7 @@ app.layout = dbc.Container(
                 dbc.Tab(tab_overview, label="📊 Resumen General"),
                 dbc.Tab(tab_compare, label="🆚 Comparador de Jugadores"),
                 dbc.Tab(tab_predict, label="🤖 Predicción de Rendimiento"),
+                dbc.Tab(tab_geo, label="🌍 Análisis Geográfico"),
             ]
         ),
         html.Br(),
@@ -430,7 +452,73 @@ def predict_performance(
         ],
         className="mt-3",
     )
+# ----------------------------------------------------------------------
+# Callbacks: Tab 4 - Análisis geográfico
+# ----------------------------------------------------------------------
+@app.callback(
+    Output("geo-kpi-row", "children"),
+    Output("graph-map-rating", "figure"),
+    Output("graph-continent-bar", "figure"),
+    Output("graph-continent-box", "figure"),
+    Input("filter-stage", "value"),
+    Input("filter-position", "value"),
+    Input("filter-continent", "value"),
+)
+def update_geo(stage, position, continent):
+    dff = apply_filters(stage, position, continent)
 
+    if dff.empty:
+        vacio = px.bar(title="Sin datos para los filtros seleccionados")
+        return [], vacio, vacio, vacio
+
+    n_continents = dff["continent"].nunique()
+    n_countries = dff["team"].nunique()
+    top_continent = dff.groupby("continent")["player_rating"].mean().idxmax()
+
+    kpis = [
+        dbc.Col(kpi_card("Continentes representados", n_continents), md=4),
+        dbc.Col(kpi_card("Selecciones en el filtro", n_countries), md=4),
+        dbc.Col(kpi_card("Mejor rating promedio por continente", top_continent), md=4),
+    ]
+
+    # --- Mapa: rating promedio y goles totales por selección ---
+    by_team = dff.groupby(["team", "continent"], as_index=False).agg(
+        rating_promedio=("player_rating", "mean"),
+        goles_totales=("goals", "sum"),
+    )
+    fig_map = px.choropleth(
+        by_team,
+        locations="team",
+        locationmode="country names",
+        color="rating_promedio",
+        hover_name="team",
+        hover_data={"goles_totales": True, "rating_promedio": ":.2f"},
+        color_continuous_scale="Viridis",
+        title="Calificación promedio de rendimiento por selección",
+    )
+    fig_map.update_layout(margin=dict(l=0, r=0, t=40, b=0))
+
+    # --- Barras: rating promedio por continente ---
+    by_continent = (
+        dff.groupby("continent", as_index=False)["player_rating"]
+        .mean()
+        .sort_values("player_rating", ascending=False)
+    )
+    fig_bar = px.bar(
+        by_continent, x="continent", y="player_rating",
+        title="Calificación promedio de rendimiento por continente",
+        color="player_rating", color_continuous_scale="Tealgrn",
+    )
+    fig_bar.update_layout(xaxis_title="", yaxis_title="Rating promedio")
+
+    # --- Boxplot: distribución del rating por continente ---
+    fig_box = px.box(
+        dff, x="continent", y="player_rating", color="continent",
+        title="Distribución de calificación de rendimiento por continente",
+    )
+    fig_box.update_layout(xaxis_title="", yaxis_title="Rating", showlegend=False)
+
+    return kpis, fig_map, fig_bar, fig_box
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8050)
