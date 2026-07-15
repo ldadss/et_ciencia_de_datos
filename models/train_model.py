@@ -19,7 +19,6 @@ import logging
 from pathlib import Path
 
 import joblib
-import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
@@ -166,6 +165,7 @@ def train_regression(df: pd.DataFrame) -> dict:
     joblib.dump(pipeline, MODELS_DIR / "model_player_rating.pkl")
     return metrics
 
+
 def train_classification_tree(df: pd.DataFrame) -> dict:
     """Modelo alternativo de clasificación (Árbol de Decisión) para comparar
     contra el Random Forest — mismo target, mismas features."""
@@ -210,6 +210,7 @@ def train_classification_tree(df: pd.DataFrame) -> dict:
     joblib.dump(pipeline, MODELS_DIR / "model_goal_involvement_tree.pkl")
     return metrics
 
+
 def main():
     df = load_dataset()
     clf_metrics = train_classification(df)
@@ -220,7 +221,7 @@ def main():
         "numeric_features": NUMERIC_FEATURES,
         "categorical_features": CATEGORICAL_FEATURES,
         "classification_metrics": clf_metrics,
-        "classification_metrics_decision_tree": clf_tree_metrics,  
+        "classification_metrics_decision_tree": clf_tree_metrics,
         "regression_metrics": reg_metrics,
     }
     with open(MODELS_DIR / "metrics.json", "w", encoding="utf-8") as f:
