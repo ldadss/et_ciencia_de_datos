@@ -188,32 +188,116 @@ tab_predict = html.Div(
                 [
                     dbc.Row(
                         [
-                            dbc.Col([html.Label("Posición"), dcc.Dropdown(id="pred-position", options=POSITIONS, value="Forward")], md=3),
-                            dbc.Col([html.Label("Pie preferido"), dcc.Dropdown(id="pred-foot", options=FEET, value=FEET[0])], md=3),
-                            dbc.Col([html.Label("Continente"), dcc.Dropdown(id="pred-continent", options=CONTINENTS, value=CONTINENTS[0])], md=3),
-                            dbc.Col([html.Label("Etapa"), dcc.Dropdown(id="pred-stage", options=STAGES, value=STAGES[0])], md=3),
+                            dbc.Col(
+                                [
+                                    html.Label("Posición"),
+                                    dcc.Dropdown(id="pred-position", options=POSITIONS, value="Forward"),
+                                ],
+                                md=3,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Pie preferido"),
+                                    dcc.Dropdown(id="pred-foot", options=FEET, value=FEET[0]),
+                                ],
+                                md=3,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Continente"),
+                                    dcc.Dropdown(id="pred-continent", options=CONTINENTS, value=CONTINENTS[0]),
+                                ],
+                                md=3,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Etapa"),
+                                    dcc.Dropdown(id="pred-stage", options=STAGES, value=STAGES[0]),
+                                ],
+                                md=3,
+                            ),
                         ],
                         className="mb-3",
                     ),
                     dbc.Row(
                         [
-                            dbc.Col([html.Label("Edad"), dbc.Input(id="pred-age", type="number", value=25)], md=2),
-                            dbc.Col([html.Label("Minutos jugados"), dbc.Input(id="pred-minutes", type="number", value=90)], md=2),
-                            dbc.Col([html.Label("Tiros"), dbc.Input(id="pred-shots", type="number", value=3)], md=2),
-                            dbc.Col([html.Label("Tiros al arco"), dbc.Input(id="pred-shots-target", type="number", value=1)], md=2),
-                            dbc.Col([html.Label("xG"), dbc.Input(id="pred-xg", type="number", value=0.3, step=0.01)], md=2),
-                            dbc.Col([html.Label("xA"), dbc.Input(id="pred-xa", type="number", value=0.2, step=0.01)], md=2),
+                            dbc.Col(
+                                [html.Label("Edad"), dbc.Input(id="pred-age", type="number", value=25)],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Minutos jugados"),
+                                    dbc.Input(id="pred-minutes", type="number", value=90),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [html.Label("Tiros"), dbc.Input(id="pred-shots", type="number", value=3)],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Tiros al arco"),
+                                    dbc.Input(id="pred-shots-target", type="number", value=1),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [html.Label("xG"), dbc.Input(id="pred-xg", type="number", value=0.3, step=0.01)],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [html.Label("xA"), dbc.Input(id="pred-xa", type="number", value=0.2, step=0.01)],
+                                md=2,
+                            ),
                         ],
                         className="mb-3",
                     ),
                     dbc.Row(
                         [
-                            dbc.Col([html.Label("Pases clave"), dbc.Input(id="pred-keypasses", type="number", value=2)], md=2),
-                            dbc.Col([html.Label("% precisión pases"), dbc.Input(id="pred-passacc", type="number", value=0.85, step=0.01)], md=2),
-                            dbc.Col([html.Label("Regates exitosos"), dbc.Input(id="pred-dribbles", type="number", value=2)], md=2),
-                            dbc.Col([html.Label("Distancia (km)"), dbc.Input(id="pred-distance", type="number", value=10.5, step=0.1)], md=2),
-                            dbc.Col([html.Label("Velocidad máx (km/h)"), dbc.Input(id="pred-topspeed", type="number", value=31.0, step=0.1)], md=2),
-                            dbc.Col([html.Label("Valor de mercado (€)"), dbc.Input(id="pred-marketvalue", type="number", value=50_000_000)], md=2),
+                            dbc.Col(
+                                [
+                                    html.Label("Pases clave"),
+                                    dbc.Input(id="pred-keypasses", type="number", value=2),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("% precisión pases"),
+                                    dbc.Input(id="pred-passacc", type="number", value=0.85, step=0.01),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Regates exitosos"),
+                                    dbc.Input(id="pred-dribbles", type="number", value=2),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Distancia (km)"),
+                                    dbc.Input(id="pred-distance", type="number", value=10.5, step=0.1),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Velocidad máx (km/h)"),
+                                    dbc.Input(id="pred-topspeed", type="number", value=31.0, step=0.1),
+                                ],
+                                md=2,
+                            ),
+                            dbc.Col(
+                                [
+                                    html.Label("Valor de mercado (€)"),
+                                    dbc.Input(id="pred-marketvalue", type="number", value=50_000_000),
+                                ],
+                                md=2,
+                            ),
                         ],
                         className="mb-3",
                     ),
@@ -224,7 +308,7 @@ tab_predict = html.Div(
         ),
         html.Div(id="prediction-output"),
     ]
-)   
+)
 
 # ----------------------------------------------------------------------
 # Tab 4: Análisis geográfico
@@ -335,7 +419,11 @@ def update_overview(stage, position, continent):
         title="Top 10 jugadores por contribución de gol (G+A)",
         color="contribucion", color_continuous_scale="Oranges",
     )
-    fig_scorers.update_layout(yaxis=dict(categoryorder="total ascending"), xaxis_title="Goles + Asistencias", yaxis_title="")
+    fig_scorers.update_layout(
+        yaxis=dict(categoryorder="total ascending"),
+        xaxis_title="Goles + Asistencias",
+        yaxis_title="",
+    )
 
     fig_xg = px.scatter(
         dff[dff["minutes_played"] > 0], x="expected_goals_xg", y="goals",
@@ -346,7 +434,10 @@ def update_overview(stage, position, continent):
 
     pos_dist = dff["position"].value_counts().reset_index()
     pos_dist.columns = ["position", "count"]
-    fig_pos = px.pie(pos_dist, names="position", values="count", title="Distribución de registros por posición", hole=0.4)
+    fig_pos = px.pie(
+        pos_dist, names="position", values="count",
+        title="Distribución de registros por posición", hole=0.4,
+    )
 
     return kpis, fig_team, fig_scorers, fig_xg, fig_pos
 
@@ -452,6 +543,8 @@ def predict_performance(
         ],
         className="mt-3",
     )
+
+
 # ----------------------------------------------------------------------
 # Callbacks: Tab 4 - Análisis geográfico
 # ----------------------------------------------------------------------
@@ -519,6 +612,7 @@ def update_geo(stage, position, continent):
     fig_box.update_layout(xaxis_title="", yaxis_title="Rating", showlegend=False)
 
     return kpis, fig_map, fig_bar, fig_box
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8050)
